@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:theme="@style/Theme.Search"
+    android:background="@color/weather_blue"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <Button
+        android:id="@+id/btnClose"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="30dp"
+        android:drawableStart="@drawable/btn_close"
+        android:text="@string/close"
+        android:textSize="18sp"
+        android:layout_marginEnd="10dp"
+        android:textColor="@color/whiteSmoke"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
+    <EditText
+        android:id="@+id/searchCityName"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:paddingStart="10dp"
+        android:background="@drawable/edit_text_background"
+        android:ems="10"
+        android:hint="@string/city_or_zipcode"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/guideline2" />
+
+
+    <EditText
+        android:id="@+id/searchCountryName"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:paddingStart="10dp"
+        android:background="@drawable/edit_text_background"
+        android:hint="Country code (Optional)"
+        android:ems="10"
+        android:inputType="text"
+        app:layout_constraintTop_toBottomOf="@+id/searchCityName"
+        app:layout_constraintStart_toStartOf="@+id/searchCityName"
+        app:layout_constraintEnd_toEndOf="@+id/searchCityName"/>
+
+    <Button
+        android:id="@+id/btn_search"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:elevation="2dp"
+        android:padding="20dp"
+        android:text="Get Weather Details"
+        android:textColor="@color/whiteSmoke"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/searchCountryName" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.2" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

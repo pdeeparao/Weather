@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="dark_gray">#8D8D87</color>
+    <color name="light_brown">#C59F97</color>
+    <color name="light_brown2">#D6ACA4</color>
+    <color name="button_color">#696969</color>
+    <color name="whiteSmoke">#F5F5F5</color>
+    <color name="gray">#BFBFBD</color>
+    <color name="text_hint_gray">#7E7E7E</color>
+    <color name="light_blue">#FFAEE8F5</color>
+    <color name="search_button">#2A80CC</color>
+    <color name="weather_blue">#469BE6</color>
+    <color name="weather_grad_start">#94BED3</color>
+    <color name="weather_grad_end">#78BBDC</color>
+    <color name="weather_blue_light">#7FACD5</color>
+</resources>

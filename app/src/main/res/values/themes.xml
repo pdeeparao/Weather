@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Theme.Weather" parent="@style/Theme.AppCompat.Light">
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:statusBarColor">@color/weather_grad_start</item>
+        <item name="colorButtonNormal">@color/button_color</item>
+    </style>
+
+    <style name="Theme.Summary.Default" parent="@style/Theme.Weather">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textColorHint">@color/gray</item>
+    </style>
+
+    <style name="Theme.Search" parent="@style/Theme.Weather">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textColorHint">@color/text_hint_gray</item>
+        <item name="colorButtonNormal">@color/search_button</item>
+    </style>
+
+</resources>
