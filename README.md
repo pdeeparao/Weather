@@ -43,6 +43,7 @@ Ui flow can be seen [here](https://drive.google.com/file/d/1saO-INwhgZZR-nGf5ORG
     * ViewModel for search related activities
 
 
-### Still not functional
+### WIP
 * Multi city search result handling
+* Unit test sample provided and project does not have 100% code coverage.
 
