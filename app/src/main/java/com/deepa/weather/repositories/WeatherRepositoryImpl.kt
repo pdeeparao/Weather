@@ -1,10 +1,12 @@
 package com.deepa.weather.repositories
 
+import android.util.Log
 import com.deepa.weather.data.CurrentLocationDataSource
 import com.deepa.weather.data.SearchDatasource
 import com.deepa.weather.data.WeatherNetworkApi
 import com.deepa.weather.data.network.Resource
 import com.deepa.weather.models.Coord
+import com.deepa.weather.models.CurrentWeather
 import com.deepa.weather.models.GeoLocation
 import com.deepa.weather.models.WeatherData
 import javax.inject.Inject
@@ -19,7 +21,7 @@ import javax.inject.Inject
 class WeatherRepositoryImpl @Inject constructor(
     private val weatherNetworkApi: WeatherNetworkApi,
     private val currentLocationDataSource: CurrentLocationDataSource,
-    private val searchDatasource: SearchDatasource
+    private val searchDatasource: SearchDatasource,
 ) : WeatherRepository {
     override suspend fun getCityGeoCoordinates(name: String): Resource<List<GeoLocation>> {
         // Pick from network and/or cache and return result
@@ -39,16 +41,36 @@ class WeatherRepositoryImpl @Inject constructor(
         coord: Coord,
         isCurrentLocation: Boolean
     ): Resource<WeatherData> {
-        val response = weatherNetworkApi.getWeather(coord.lat, coord.lon)
-        return if (response.isSuccessful) {
-            val current = response.body()
-            current?.let { Resource.success(WeatherData(coord, isCurrentLocation, it)) }
-                ?: Resource.error("Unknown Error", null)
-        } else {
-            Resource.error(
-                response.errorBody().toString(),
-                WeatherData(coord, isCurrentLocation, null)
+        try {
+            val response = weatherNetworkApi.getWeather(coord.lat, coord.lon)
+            return if (response.isSuccessful) {
+                val current = response.body()
+                current?.let {
+                    Resource.success(WeatherData(coord, isCurrentLocation, it))
+                }
+                    ?: Resource.error("Unknown Error", null)
+            } else {
+                Log.d("WeatherRepositoryImpl", " Found location name for $coord")
+
+                Resource.error(
+                    response.errorBody().toString(),
+                    WeatherData(
+                        coord,
+                        isCurrentLocation,
+                        CurrentWeather.getCurrentWeather(coord)
+                    )
+                )
+            }
+        } catch (exception: Exception) {
+            return Resource.error(
+                "Network error",
+                WeatherData(
+                    coord,
+                    isCurrentLocation,
+                    CurrentWeather.getCurrentWeather(coord)
+                )
             )
+
         }
     }
 
@@ -65,7 +87,6 @@ class WeatherRepositoryImpl @Inject constructor(
         if (currentLocation != null) {
             val weatherData = getWeather(currentLocation, true)
             result.add(weatherData)
-
         }
         recentSearches.forEach {
             val weatherData = getWeather(it)

@@ -7,7 +7,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.deepa.weather.data.local.SharedPreferenceHelper
 import com.deepa.weather.data.location.WeatherLocationManager
-import com.deepa.weather.models.Coord
+import com.deepa.weather.data.network.Resource
+import com.deepa.weather.data.network.Status
 import com.deepa.weather.repositories.WeatherRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -36,6 +37,9 @@ class WeatherViewModel @Inject constructor(
             )
         )
     val viewState: LiveData<WeatherViewStateData> = viewStateData
+    private val searchLocationStatusData: MutableLiveData<Resource<Boolean>> =
+        MutableLiveData(Resource.success(true))
+    val searchLocationStatus: LiveData<Resource<Boolean>> = searchLocationStatusData
     private val TAG: String = WeatherViewModel::class.java.canonicalName
 
     fun onPermissionDialogShown() {
@@ -55,29 +59,38 @@ class WeatherViewModel @Inject constructor(
     fun userSearchLocation() {
         val currState = viewStateData.value ?: return
         viewModelScope.launch {
-            try {
-                val weatherData = weatherRepository.getWeatherForLastSearched()
-                if (weatherData == null) {
-                    Log.e(TAG, "Last search location is null")
-                }
-                val newList = ArrayList(currState.data)
-                newList.add(weatherData)
+            searchLocationStatusData.value = Resource.loading(true)
+            val weatherData = weatherRepository.getWeatherForLastSearched()
+            if (weatherData == null) {
+                Log.e(TAG, "Last search location is null")
+            }
+            val newList = ArrayList(currState.data)
+            newList.add(weatherData)
+
+            if (weatherData == null || weatherData.status == Status.ERROR) {
+                searchLocationStatusData.value =
+                    Resource.error(
+                        "Failed to load the weather. (Exception: ${weatherData?.message ?: "Unknown"})Try again",
+                        false
+                    )
+            } else {
                 val nextState = currState.copy(
                     data = newList,
                     viewMode = WeatherViewMode.Detail(weatherData?.data?.coor)
                 )
                 changeState(currState, nextState, "UserSearchLocation: ")
-            } catch (exception: Exception) {
-                //TODO: Update the viewModelState to reflect the error and display the error to user.
             }
-
         }
     }
 
-    fun updateCurrentDetail(coord: Coord) {
+    fun updateCurrentDetail(pos: Int) {
         val currState = viewStateData.value ?: return
-        val nextState = currState.copy(viewMode = WeatherViewMode.Detail(coord))
-        changeState(currState, nextState, "updateCurrentDetail to $coord")
+        if (pos < currState.data.size) {
+            currState.data[pos].data?.coor?.let {
+                val nextState = currState.copy(viewMode = WeatherViewMode.Detail(it))
+                changeState(currState, nextState, "updateCurrentDetail to position: $pos")
+            }
+        }
     }
 
 
@@ -96,13 +109,10 @@ class WeatherViewModel @Inject constructor(
     }
 
     private suspend fun refreshData(context: String = "") {
-        try {
-            val listOfWeather = weatherRepository.getAllWeather()
-            val currState = viewStateData.value ?: return
-            val nextState = currState.copy(data = listOfWeather)
-            changeState(currState, nextState, "refreshData for $context")
-        } catch (e: java.lang.Exception) {
-        }
+        val listOfWeather = weatherRepository.getAllWeather()
+        val currState = viewStateData.value ?: return
+        val nextState = currState.copy(data = listOfWeather)
+        changeState(currState, nextState, "refreshData for $context")
     }
 
 

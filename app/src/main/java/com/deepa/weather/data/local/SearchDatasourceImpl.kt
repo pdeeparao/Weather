@@ -32,4 +32,5 @@ class SearchDatasourceImpl @Inject constructor(private val sharedPreferenceHelpe
         val locations = getRecentSearchLocations()
         return if (locations.isNotEmpty()) locations[0] else null
     }
+
 }

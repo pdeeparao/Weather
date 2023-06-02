@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import java.lang.reflect.Type
 import javax.inject.Inject
 
@@ -28,12 +29,26 @@ class SharedPreferenceHelper @Inject constructor(private val appContext: Context
         prefsEditor.commit()
     }
 
+    fun saveString(key: String, value: String) {
+        val weatherPref: SharedPreferences =
+            appContext.getSharedPreferences(sharedPrefName, MODE_PRIVATE)
+        val prefsEditor: SharedPreferences.Editor = weatherPref.edit()
+        prefsEditor.putString(key, value)
+        prefsEditor.commit()
+
+    }
+
+    fun getString(key: String, default: String): String {
+        val weatherPref: SharedPreferences =
+            appContext.getSharedPreferences(sharedPrefName, MODE_PRIVATE)
+        return weatherPref.getString(key, default) ?: default
+    }
 
     fun <T> saveData(key: String, data: T?) {
         val weatherPref: SharedPreferences =
             appContext.getSharedPreferences(sharedPrefName, MODE_PRIVATE)
         val prefsEditor: SharedPreferences.Editor = weatherPref.edit()
-        val gson = Gson()
+        val gson = GsonBuilder().disableHtmlEscaping().create()
         val jsonData = gson.toJson(data)
         prefsEditor.putString(key, jsonData)
         prefsEditor.commit()

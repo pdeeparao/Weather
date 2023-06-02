@@ -25,7 +25,7 @@
             app:layout_constraintTop_toTopOf="parent"
             android:layout_marginLeft="20dp"
             android:layout_marginTop="15dp"
-            android:text="Saratoga"
+            android:text="-"
             android:textColor="@color/white"
             android:textSize="30sp" />
 
@@ -34,7 +34,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="50dp"
-            android:text="Sunny"
+            android:text="-"
             android:textSize="15sp"
             android:layout_marginBottom="15dp"
             app:layout_constraintStart_toStartOf="@+id/city"
@@ -44,7 +44,7 @@
             android:id="@+id/currTemp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="82"
+            android:text="-"
             android:textSize="30sp"
             app:layout_constraintEnd_toEndOf="@id/hiTemp"
             app:layout_constraintStart_toStartOf="@id/loTempLabel"
@@ -65,7 +65,7 @@
             android:id="@+id/loTemp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="42"
+            android:text="-"
             app:layout_constraintBottom_toBottomOf="@id/loTempLabel"
             app:layout_constraintStart_toEndOf="@id/loTempLabel"
             app:layout_constraintTop_toTopOf="@id/loTempLabel" />
@@ -84,7 +84,7 @@
             android:id="@+id/hiTemp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="82"
+            android:text="-"
             app:layout_constraintBottom_toBottomOf="@id/loTempLabel"
             app:layout_constraintStart_toEndOf="@id/hiTempLabel"
             app:layout_constraintTop_toTopOf="@id/loTempLabel" />

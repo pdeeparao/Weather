@@ -12,6 +12,5 @@ class WeatherUtils {
             return formatter.format(format, objects).toString()
 
         }
-
     }
 }

@@ -17,4 +17,17 @@ data class CurrentWeather(
     val wind: Wind,
     val rain: Rain,
     val clouds: Clouds
-)
+) {
+    companion object {
+        fun getCurrentWeather(coord: Coord): CurrentWeather {
+            return CurrentWeather(
+                coord = coord, cityName = "",
+                weather = listOf(),
+                main = Main(0.0, 0.0, 0.0, 0, 0),
+                time = 0L, cityId = "", visibility = 0, wind = Wind(0.0), rain = Rain(0.0),
+                clouds = Clouds(0)
+            )
+
+        }
+    }
+}

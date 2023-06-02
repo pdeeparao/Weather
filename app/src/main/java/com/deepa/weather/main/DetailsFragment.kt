@@ -49,7 +49,6 @@ class DetailsFragment : Fragment() {
         viewModel.viewState.value?.let {
             showPermissionDialog(it)
         }
-
         return view
     }
 
@@ -59,7 +58,7 @@ class DetailsFragment : Fragment() {
     ) {
         detailsAdapter.updateList(weatherDataList)
         val viewMode = if (viewmodelStateData.viewMode is WeatherViewMode.Detail) {
-            viewmodelStateData.viewMode as WeatherViewMode.Detail
+            viewmodelStateData.viewMode
         } else null
         val coord = viewMode?.coord
         var focusIdx = 0
@@ -79,6 +78,7 @@ class DetailsFragment : Fragment() {
         if (coord == null || dataCoor == null) return false
         return (coord.lat == dataCoor.lat && coord.lon == coord.lon)
     }
+
 
     companion object {
         /**

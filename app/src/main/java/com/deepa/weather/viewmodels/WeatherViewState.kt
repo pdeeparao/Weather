@@ -9,5 +9,3 @@ data class WeatherViewStateData(
     val locationPermissionRequested: Boolean = false,
     val locationPermissionGranted: Boolean = false,
 )
-
-

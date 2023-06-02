@@ -1,6 +1,7 @@
 package com.deepa.weather.main.adapters
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
@@ -29,7 +30,19 @@ class DetailsAdapter @Inject constructor() : RecyclerView.Adapter<RecyclerView.V
         }
 
         fun bind(weatherDataResource: Resource<WeatherData>, pos: Int) {
-            if (weatherDataResource.status == Status.ERROR) return
+            if (weatherDataResource.status == Status.ERROR) {
+                binding.errorLoading.visibility = View.VISIBLE
+                val lat = weatherDataResource.data?.coor?.lat
+                val lon = weatherDataResource.data?.coor?.lon
+                // Hack: When weather data cannot be loaded, load the known information like location name.
+                // Showing location latitude and longitude for now.
+                if (lat != null && lon != null) {
+                    binding.city.text = String.format("Lat: %1\$.2f, Lon: %2$.2f", lat, lon)
+                }
+
+                return
+            }
+            binding.errorLoading.visibility = View.GONE
             val weatherData = weatherDataResource.data ?: return
             val currWeather = weatherData.currentWeather
 
@@ -106,6 +119,7 @@ class DetailsAdapter @Inject constructor() : RecyclerView.Adapter<RecyclerView.V
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val detailsViewHolder = holder as DetailsViewHolder
         detailsViewHolder.bind(detailsList[position], position)
+        currentFocusPos = position
     }
 
 }

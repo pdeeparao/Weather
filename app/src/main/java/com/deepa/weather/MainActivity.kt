@@ -6,10 +6,14 @@ import android.os.Bundle
 import android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import com.deepa.weather.data.network.Resource
+import com.deepa.weather.data.network.Status
 import com.deepa.weather.databinding.ActivityMainBinding
 import com.deepa.weather.main.DetailsFragment
 import com.deepa.weather.models.Coord
 import com.deepa.weather.search.SearchActivity
+import com.deepa.weather.ui.CommonDialog
 import com.deepa.weather.viewmodels.WeatherViewModel
 import com.deepa.weather.viewmodels.WeatherViewStateData
 import com.deepa.weather.viewmodels.WeatherViewType
@@ -66,6 +70,31 @@ class MainActivity : AppCompatActivity() {
 
         weatherViewModel.setupDefaultView()
         weatherViewModel.viewState.observe(this) { updateUi(it) }
+
+        weatherViewModel.searchLocationStatus.observe(this) { handleSearchResult(it) }
+    }
+
+    private fun handleSearchResult(searchResult: Resource<Boolean>?) {
+        if (searchResult?.status == Status.ERROR) {
+            showError(searchResult.message ?: "Unknown error")
+        }
+    }
+
+    private fun showError(message: String) {
+        val dialogFragment = CommonDialog()
+
+        val bundle = Bundle()
+        bundle.putString("message", message)
+        dialogFragment.arguments = bundle
+
+        val ft = supportFragmentManager.beginTransaction()
+        val prev: Fragment? = supportFragmentManager.findFragmentByTag("CommonErrorDialog")
+        if (prev != null) {
+            ft.remove(prev)
+        }
+        ft.addToBackStack(null)
+        dialogFragment.show(ft, "CommonErrorDialog")
+
     }
 
     override fun onResume() {
@@ -84,15 +113,9 @@ class MainActivity : AppCompatActivity() {
                 startActivity(this)
             }
         }
-        //TODO: Is this needed.
-//        binding.toggleView.setOnClickListener{
-//            val currState = weatherViewModel.viewState.value?: return@setOnClickListener
-//            if(currState.inputState is InputState.DetailedView){
-//                weatherViewModel.setViewType(WeatherViewType.Summary)
-//            }
-//        }
     }
 
+    // TODO: Add Summary of Locations view
     private fun updateUi(currState: WeatherViewStateData) {
 //        when(currState.viewType){
 //            WeatherViewType.Detail, WeatherViewType.LastSearchDetail->{
