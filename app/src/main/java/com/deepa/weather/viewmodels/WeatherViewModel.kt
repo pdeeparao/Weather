@@ -7,9 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.deepa.weather.data.local.SharedPreferenceHelper
 import com.deepa.weather.data.location.WeatherLocationManager
-import com.deepa.weather.data.network.Resource
 import com.deepa.weather.models.Coord
-import com.deepa.weather.models.WeatherData
 import com.deepa.weather.repositories.WeatherRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -103,7 +101,7 @@ class WeatherViewModel @Inject constructor(
             val currState = viewStateData.value ?: return
             val nextState = currState.copy(data = listOfWeather)
             changeState(currState, nextState, "refreshData for $context")
-        }catch (e: java.lang.Exception){
+        } catch (e: java.lang.Exception) {
         }
     }
 

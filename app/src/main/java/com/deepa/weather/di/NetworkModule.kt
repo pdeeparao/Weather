@@ -17,7 +17,6 @@ import okhttp3.CacheControl
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.util.Locale
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
@@ -26,14 +25,16 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
     @Provides
-    fun provideWeatherNetworkApi(weatherNetworkApi: WeatherNetworkApiImpl): WeatherNetworkApi = weatherNetworkApi
+    fun provideWeatherNetworkApi(weatherNetworkApi: WeatherNetworkApiImpl): WeatherNetworkApi =
+        weatherNetworkApi
 
     @Provides
     fun provideBaseUrl(): String = BASE_URL
 
     @Singleton
     @Provides
-    fun provideCache(@ApplicationContext context: Context):Cache = Cache(context.cacheDir, CACHE_SIZE)
+    fun provideCache(@ApplicationContext context: Context): Cache =
+        Cache(context.cacheDir, CACHE_SIZE)
 
     @Singleton
     @Provides
@@ -63,12 +64,12 @@ object NetworkModule {
 
     @Singleton
     @Provides
-    fun provideRetrofit(okHttpClient: OkHttpClient, BASE_URL:String): Retrofit =
+    fun provideRetrofit(okHttpClient: OkHttpClient, BASE_URL: String): Retrofit =
         Retrofit.Builder()
-        .addConverterFactory(GsonConverterFactory.create())
-        .baseUrl(BASE_URL)
-        .client(okHttpClient)
-        .build()
+            .addConverterFactory(GsonConverterFactory.create())
+            .baseUrl(BASE_URL)
+            .client(okHttpClient)
+            .build()
 
     @Provides
     @Singleton

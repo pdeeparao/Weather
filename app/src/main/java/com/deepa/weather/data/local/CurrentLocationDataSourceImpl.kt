@@ -7,7 +7,7 @@ import javax.inject.Inject
 
 class CurrentLocationDataSourceImpl @Inject constructor(
     private val weatherLocationManager: WeatherLocationManager
-) : CurrentLocationDataSource{
+) : CurrentLocationDataSource {
     override fun getCurrentLocation(): Coord? {
         return weatherLocationManager.getCurrentLocation()
     }

@@ -1,11 +1,11 @@
 package com.deepa.weather.main
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -40,26 +40,32 @@ class DetailsFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_details, container, false)
 
         detailsListView = view?.findViewById(R.id.cities)!!
-        detailsListView.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
+        detailsListView.layoutManager =
+            LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
         detailsAdapter = DetailsAdapter()
         detailsListView.adapter = detailsAdapter
         detailsListView.addItemDecoration(VerticalSpaceDecorator(10))
         viewModel.viewState.observe(requireActivity()) { updateUi(it, it.data) }
-        viewModel.viewState.value?.let{
+        viewModel.viewState.value?.let {
             showPermissionDialog(it)
         }
 
         return view
     }
 
-    private fun updateUi(viewmodelStateData: WeatherViewStateData, weatherDataList: List<Resource<WeatherData>>){
+    private fun updateUi(
+        viewmodelStateData: WeatherViewStateData,
+        weatherDataList: List<Resource<WeatherData>>
+    ) {
         detailsAdapter.updateList(weatherDataList)
-        val viewMode = if(viewmodelStateData.viewMode is WeatherViewMode.Detail){viewmodelStateData.viewMode as WeatherViewMode.Detail} else null
+        val viewMode = if (viewmodelStateData.viewMode is WeatherViewMode.Detail) {
+            viewmodelStateData.viewMode as WeatherViewMode.Detail
+        } else null
         val coord = viewMode?.coord
         var focusIdx = 0
 
-        for(i in weatherDataList.indices){
-            if(isWeatherDataForLocation(coord, weatherDataList[i])) {
+        for (i in weatherDataList.indices) {
+            if (isWeatherDataForLocation(coord, weatherDataList[i])) {
                 focusIdx = i
             }
         }
@@ -67,11 +73,11 @@ class DetailsFragment : Fragment() {
         detailsAdapter.notifyDataSetChanged()
     }
 
-    private fun isWeatherDataForLocation(coord: Coord?, data: Resource<WeatherData>): Boolean{
+    private fun isWeatherDataForLocation(coord: Coord?, data: Resource<WeatherData>): Boolean {
         val dataCoor = data.data?.coor
-        if(coord == null && dataCoor == null) return false
-        if(coord == null || dataCoor == null) return false
-        return (coord.lat==dataCoor.lat && coord.lon == coord.lon)
+        if (coord == null && dataCoor == null) return false
+        if (coord == null || dataCoor == null) return false
+        return (coord.lat == dataCoor.lat && coord.lon == coord.lon)
     }
 
     companion object {
@@ -85,25 +91,36 @@ class DetailsFragment : Fragment() {
     }
 
 
-    private fun showPermissionDialog(currState: WeatherViewStateData){
-        if(!currState.locationPermissionGranted && !currState.locationPermissionRequested)
-        {
+    private fun showPermissionDialog(currState: WeatherViewStateData) {
+        if (!currState.locationPermissionGranted && !currState.locationPermissionRequested) {
             val locationPermissionRequest = registerForActivityResult(
                 ActivityResultContracts.RequestMultiplePermissions()
             ) { permissions ->
                 when {
-                    permissions.getOrDefault(android.Manifest.permission.ACCESS_FINE_LOCATION, false) -> {
+                    permissions.getOrDefault(
+                        android.Manifest.permission.ACCESS_FINE_LOCATION,
+                        false
+                    ) -> {
                         viewModel.onPermissionGranted()
                     }
-                    permissions.getOrDefault(android.Manifest.permission.ACCESS_COARSE_LOCATION, false) -> {
+
+                    permissions.getOrDefault(
+                        android.Manifest.permission.ACCESS_COARSE_LOCATION,
+                        false
+                    ) -> {
                         // Only approximate location access granted.
-                    } else -> {
-                    // No location access granted.
-                }
+                    }
+
+                    else -> {
+                        // No location access granted.
+                    }
                 }
             }
-            locationPermissionRequest.launch(arrayOf(
-                android.Manifest.permission.ACCESS_COARSE_LOCATION))
+            locationPermissionRequest.launch(
+                arrayOf(
+                    android.Manifest.permission.ACCESS_COARSE_LOCATION
+                )
+            )
             viewModel.onPermissionDialogShown()
         }
 

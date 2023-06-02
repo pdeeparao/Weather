@@ -9,13 +9,20 @@ import com.deepa.weather.models.Coord
 import javax.inject.Inject
 
 
-class WeatherLocationManager @Inject constructor(private val context: Context){
-    fun isLocationPermissionGranted(): Boolean{
-        return  ContextCompat.checkSelfPermission( context, android.Manifest.permission.ACCESS_COARSE_LOCATION ) == PackageManager.PERMISSION_GRANTED
+class WeatherLocationManager @Inject constructor(private val context: Context) {
+    fun isLocationPermissionGranted(): Boolean {
+        return ContextCompat.checkSelfPermission(
+            context,
+            android.Manifest.permission.ACCESS_COARSE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED
     }
 
     fun getCurrentLocation(): Coord? {
-        if( ContextCompat.checkSelfPermission( context, android.Manifest.permission.ACCESS_COARSE_LOCATION ) != PackageManager.PERMISSION_GRANTED) return null
+        if (ContextCompat.checkSelfPermission(
+                context,
+                android.Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) return null
         try {
             val locationManager = context.getSystemService(LOCATION_SERVICE) as LocationManager
             val isGPSEnabled = locationManager
@@ -36,15 +43,15 @@ class WeatherLocationManager @Inject constructor(private val context: Context){
                     }
                 } else
                     if (isGPSEnabled) {
-                            if (locationManager != null) {
-                                val location = locationManager
-                                    .getLastKnownLocation(LocationManager.GPS_PROVIDER)
-                                if (location != null) {
-                                    return Coord(location.latitude, location.longitude)
-                                }
+                        if (locationManager != null) {
+                            val location = locationManager
+                                .getLastKnownLocation(LocationManager.GPS_PROVIDER)
+                            if (location != null) {
+                                return Coord(location.latitude, location.longitude)
                             }
                         }
                     }
+            }
         } catch (e: Exception) {
             e.printStackTrace()
         }

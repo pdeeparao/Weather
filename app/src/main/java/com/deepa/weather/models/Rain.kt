@@ -4,4 +4,5 @@ import com.google.gson.annotations.SerializedName
 
 data class Rain(
     @SerializedName("ih")
-    val hourly: Double)
+    val hourly: Double
+)

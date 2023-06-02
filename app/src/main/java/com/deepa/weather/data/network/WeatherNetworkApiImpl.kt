@@ -7,11 +7,12 @@ import com.deepa.weather.network.WeatherApiService
 import retrofit2.Response
 import javax.inject.Inject
 
-class WeatherNetworkApiImpl @Inject constructor(private val weatherApiService: WeatherApiService):
+class WeatherNetworkApiImpl @Inject constructor(private val weatherApiService: WeatherApiService) :
     WeatherNetworkApi {
     override suspend fun getGeoLocation(name: String): Response<List<GeoLocation>> {
         return weatherApiService.getGeoLocation(name)
     }
+
     override suspend fun getWeather(lat: Double, lon: Double): Response<CurrentWeather> {
         return weatherApiService.getWeatherForecast(lat, lon)
     }

@@ -17,6 +17,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginTop="10dp"
-        android:layout_marginRight="10dp"/>
+        android:layout_marginRight="10dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

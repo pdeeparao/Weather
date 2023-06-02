@@ -18,33 +18,37 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class SearchViewModel @Inject constructor(private val weatherRepository: WeatherRepository): ViewModel(){
+class SearchViewModel @Inject constructor(private val weatherRepository: WeatherRepository) :
+    ViewModel() {
     private val viewStateData: MutableLiveData<SearchViewState> =
         MutableLiveData(SearchViewState(SearchRequest(), SearchState.Initial))
-    val viewState :LiveData<SearchViewState> = viewStateData
+    val viewState: LiveData<SearchViewState> = viewStateData
     private val TAG: String = SearchViewModel::class.java.canonicalName
 
-    fun onSearchStarted(cityOrZipCode: String, countryCode: String){
-        val currState = viewState.value?:run {
+    fun onSearchStarted(cityOrZipCode: String, countryCode: String) {
+        val currState = viewState.value ?: run {
             Log.e(TAG, "viewState not set")
             return
         }
 
-        if(currState.searchState is SearchState.Searching){
+        if (currState.searchState is SearchState.Searching) {
             Log.e(TAG, "Search is ongoing")
             return
         }
 
         val input = SearchRequest(cityOrZipCode, countryCode)
-        if(cityOrZipCode.isBlank()) {
+        if (cityOrZipCode.isBlank()) {
             val error = SearchState.Error(SearchErrorState.MissingCityOrZipCode)
-            viewStateData.value = currState.copy(searchRequest = input, searchState= error)
+            viewStateData.value = currState.copy(searchRequest = input, searchState = error)
         }
-        viewStateData.value = currState.copy(searchRequest = input, searchState = SearchState.Searching(
-            input
+        viewStateData.value = currState.copy(
+            searchRequest = input, searchState = SearchState.Searching(
+                input
+            )
         )
-        )
-        val queryName = if(countryCode.isBlank()) cityOrZipCode else StringBuffer(cityOrZipCode).append(",").append(countryCode).toString()
+        val queryName =
+            if (countryCode.isBlank()) cityOrZipCode else StringBuffer(cityOrZipCode).append(",")
+                .append(countryCode).toString()
         viewModelScope.launch {
             try {
                 val result: Resource<List<GeoLocation>> =
@@ -72,8 +76,15 @@ class SearchViewModel @Inject constructor(private val weatherRepository: Weather
                     currState.copy(searchState = SearchState.Error(error))
                 }
                 viewStateData.value = nextState
-            }catch (exception: Exception){
-                viewStateData.value = currState.copy(searchState = SearchState.Error(SearchErrorState.Error(exception.message?:"Error getting search location. Try again", exception)))
+            } catch (exception: Exception) {
+                viewStateData.value = currState.copy(
+                    searchState = SearchState.Error(
+                        SearchErrorState.Error(
+                            exception.message ?: "Error getting search location. Try again",
+                            exception
+                        )
+                    )
+                )
             }
         }
     }

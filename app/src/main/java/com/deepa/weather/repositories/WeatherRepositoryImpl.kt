@@ -2,8 +2,8 @@ package com.deepa.weather.repositories
 
 import com.deepa.weather.data.CurrentLocationDataSource
 import com.deepa.weather.data.SearchDatasource
-import com.deepa.weather.data.network.Resource
 import com.deepa.weather.data.WeatherNetworkApi
+import com.deepa.weather.data.network.Resource
 import com.deepa.weather.models.Coord
 import com.deepa.weather.models.GeoLocation
 import com.deepa.weather.models.WeatherData

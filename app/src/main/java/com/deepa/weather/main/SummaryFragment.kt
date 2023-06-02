@@ -52,42 +52,54 @@ class SummaryFragment : Fragment() {
         })
         summaryListView.adapter = summaryAdapter
         summaryListView.addItemDecoration(VerticalSpaceDecorator(10))
-        viewModel.viewState.observe(requireActivity()){updateUi(it.data)}
+        viewModel.viewState.observe(requireActivity()) { updateUi(it.data) }
 
-        viewModel.viewState.value?.let{
+        viewModel.viewState.value?.let {
             showPermissionDialog(it)
         }
         return view
     }
 
-    private fun updateUi(weatherDataList: List<Resource<WeatherData>>){
+    private fun updateUi(weatherDataList: List<Resource<WeatherData>>) {
         summaryAdapter.updateList(weatherDataList)
 
     }
 
-    private fun showPermissionDialog(currState: WeatherViewStateData){
-        if(!currState.locationPermissionGranted && !currState.locationPermissionRequested)
-        {
+    private fun showPermissionDialog(currState: WeatherViewStateData) {
+        if (!currState.locationPermissionGranted && !currState.locationPermissionRequested) {
             val locationPermissionRequest = registerForActivityResult(
                 ActivityResultContracts.RequestMultiplePermissions()
             ) { permissions ->
                 when {
-                    permissions.getOrDefault(android.Manifest.permission.ACCESS_FINE_LOCATION, false) -> {
+                    permissions.getOrDefault(
+                        android.Manifest.permission.ACCESS_FINE_LOCATION,
+                        false
+                    ) -> {
                         viewModel.onPermissionGranted()
                     }
-                    permissions.getOrDefault(android.Manifest.permission.ACCESS_COARSE_LOCATION, false) -> {
+
+                    permissions.getOrDefault(
+                        android.Manifest.permission.ACCESS_COARSE_LOCATION,
+                        false
+                    ) -> {
                         // Only approximate location access granted.
-                    } else -> {
-                    // No location access granted.
-                }
+                    }
+
+                    else -> {
+                        // No location access granted.
+                    }
                 }
             }
-            locationPermissionRequest.launch(arrayOf(
-                android.Manifest.permission.ACCESS_COARSE_LOCATION))
+            locationPermissionRequest.launch(
+                arrayOf(
+                    android.Manifest.permission.ACCESS_COARSE_LOCATION
+                )
+            )
             viewModel.onPermissionDialogShown()
         }
 
     }
+
     companion object {
         /**
          * Use this factory method to create a new instance of

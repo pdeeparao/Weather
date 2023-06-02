@@ -36,7 +36,7 @@ class SearchActivity : AppCompatActivity() {
         setupObservers()
     }
 
-    private fun setupObservers(){
+    private fun setupObservers() {
         binding.btnSearch.setOnClickListener {
             searchViewModel.onSearchStarted(
                 cityNameTextView.text.toString(),
@@ -48,16 +48,14 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
-    private fun updateUi(searchViewState: SearchViewState){
-        if(searchViewState.searchState is SearchState.Searching){
+    private fun updateUi(searchViewState: SearchViewState) {
+        if (searchViewState.searchState is SearchState.Searching) {
             Toast.makeText(this, "Searching", Toast.LENGTH_LONG)
-        }
-        else if(searchViewState.searchState is SearchState.SearchResult){
+        } else if (searchViewState.searchState is SearchState.SearchResult) {
             val result = searchViewState.searchState
-            if(result.results.isEmpty()){
+            if (result.results.isEmpty()) {
                 showError("No results. Check the city name and try again. ")
-            }
-            else if(result.results.size == 1){
+            } else if (result.results.size == 1) {
                 val intent = Intent(this, MainActivity::class.java)
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                 val coord = Coord(result.results[0].lat, result.results[0].lon)
@@ -65,19 +63,17 @@ class SearchActivity : AppCompatActivity() {
                 intent.putExtras(bundle)
                 finish()
                 startActivity(intent)
-            }
-            else{
+            } else {
                 // TODO: Show dialog to allow user to select the city from multiple choice.
                 showError("Multiple cities found. Case not handled yet. Narrow the search by specifying neighboring cities. ")
             }
             Toast.makeText(this, "got result", Toast.LENGTH_LONG)
-        }
-        else if(searchViewState.searchState is SearchState.Error){
+        } else if (searchViewState.searchState is SearchState.Error) {
             showError("Something went wrong. Try again.")
         }
     }
 
-    private fun showError(message: String){
+    private fun showError(message: String) {
         val dialogFragment = CommonDialog()
 
         val bundle = Bundle()

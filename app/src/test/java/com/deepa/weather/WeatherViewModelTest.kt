@@ -44,7 +44,7 @@ class WeatherViewModelTest {
     val gson: Gson = Gson()
 
     val weatherLocationManager: WeatherLocationManager = mockk()
-    val weatherRepository :WeatherRepository = mockk()
+    val weatherRepository: WeatherRepository = mockk()
     val sharedPreferenceHelper: SharedPreferenceHelper = mockk()
 
     lateinit var weatherViewModel: WeatherViewModel
@@ -67,7 +67,7 @@ class WeatherViewModelTest {
     }
 
     @After
-    fun after(){
+    fun after() {
         unmockkAll()
     }
 
@@ -79,15 +79,15 @@ class WeatherViewModelTest {
     }
 
     @Test
-    fun userSearchLocation_updatesViewModeWithRecentSearch(){
+    fun userSearchLocation_updatesViewModeWithRecentSearch() {
         weatherViewModel.userSearchLocation()
 
         verifyIsDetailMode(searchCoord)
     }
 
     @Test
-    fun onViewResumed_refreshesData() = runBlocking{
-        val firstData = getAllWeatherResults(COORD1 , COORD2)
+    fun onViewResumed_refreshesData() = runBlocking {
+        val firstData = getAllWeatherResults(COORD1, COORD2)
         coEvery { weatherRepository.getAllWeather() } returns firstData
         weatherViewModel.onViewResumed()
         verifyDataRefreshed(firstData, weatherViewModel.viewState?.value?.data)
@@ -103,7 +103,7 @@ class WeatherViewModelTest {
         verifyDataRefreshed(allData, weatherViewModel.viewState?.value?.data)
     }
 
-    private fun verifyIsDetailMode(coord: Coord?){
+    private fun verifyIsDetailMode(coord: Coord?) {
         var currMode = getIfDetailMode()
         assertNotNull(getViewMode())
         assertTrue(getViewMode() is WeatherViewMode.Detail)
@@ -112,7 +112,8 @@ class WeatherViewModelTest {
 
     private fun verifyDataRefreshed(
         expected: List<Resource<WeatherData>>?,
-        actual: List<Resource<WeatherData>>?){
+        actual: List<Resource<WeatherData>>?
+    ) {
         assertNotNull(expected)
         assertNotNull(actual)
         val gson = Gson()
@@ -131,36 +132,37 @@ class WeatherViewModelTest {
     }
 
     private fun setupDefaultMocks() {
-        every{sharedPreferenceHelper.onLocationPermissionDialogShown()} returns Unit
-        every{sharedPreferenceHelper.isLocationPermissionDialogShown()} returns true
-        every{weatherLocationManager.isLocationPermissionGranted()} returns true
+        every { sharedPreferenceHelper.onLocationPermissionDialogShown() } returns Unit
+        every { sharedPreferenceHelper.isLocationPermissionDialogShown() } returns true
+        every { weatherLocationManager.isLocationPermissionGranted() } returns true
         setupWeatherRepository()
     }
 
-    private fun setupWeatherRepository(coord1: Coord = COORD1, coord2: Coord= COORD2) {
-        val allData =  getAllWeatherResults(coord1, coord2)
-        coEvery{weatherRepository.getWeather(any(), any())} returns allData[0]
-        coEvery {  weatherRepository.getAllWeather()} returns allData
+    private fun setupWeatherRepository(coord1: Coord = COORD1, coord2: Coord = COORD2) {
+        val allData = getAllWeatherResults(coord1, coord2)
+        coEvery { weatherRepository.getWeather(any(), any()) } returns allData[0]
+        coEvery { weatherRepository.getAllWeather() } returns allData
 
         val lastSearchData = Resource.success(getWeatherData(searchCoord))
-        coEvery{weatherRepository.getWeatherForLastSearched()} returns lastSearchData
+        coEvery { weatherRepository.getWeatherForLastSearched() } returns lastSearchData
     }
 
-    private fun getAllWeatherResults(coord1: Coord, coord2: Coord): List<Resource<WeatherData>>{
+    private fun getAllWeatherResults(coord1: Coord, coord2: Coord): List<Resource<WeatherData>> {
         val allData = ArrayList<Resource<WeatherData>>()
-        val data1 = Resource.success(getWeatherData(coord1?:COORD1))
-        val data2 = Resource.success(getWeatherData(coord2?:COORD2))
+        val data1 = Resource.success(getWeatherData(coord1 ?: COORD1))
+        val data2 = Resource.success(getWeatherData(coord2 ?: COORD2))
 
-        coord1?.let{allData.add(data1)}
-        coord2?.let{allData.add(data2)}
+        coord1?.let { allData.add(data1) }
+        coord2?.let { allData.add(data2) }
         return allData
 
     }
 
-    private fun setupEmptyRepository(){
-        coEvery {  weatherRepository.getAllWeather()} returns listOf()
+    private fun setupEmptyRepository() {
+        coEvery { weatherRepository.getAllWeather() } returns listOf()
 
     }
+
     private fun getWeatherData(coor: Coord = COORD1, location: String = "Palo Alto"): WeatherData {
         return WeatherData(coor, true, getCurrentWeather(coor, location))
     }
@@ -185,7 +187,7 @@ class WeatherViewModelTest {
         return gson.toJson(data)
     }
 
-    fun <T> getData(key: String, type: Type): T?{
+    fun <T> getData(key: String, type: Type): T? {
         return gson.fromJson(key, type)
     }
 

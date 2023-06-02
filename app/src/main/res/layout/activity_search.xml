@@ -17,8 +17,8 @@
         android:layout_marginEnd="10dp"
         android:textColor="@color/whiteSmoke"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        />
+        app:layout_constraintEnd_toEndOf="parent" />
+
     <EditText
         android:id="@+id/searchCityName"
         android:layout_width="match_parent"
@@ -48,7 +48,7 @@
         android:inputType="text"
         app:layout_constraintTop_toBottomOf="@+id/searchCityName"
         app:layout_constraintStart_toStartOf="@+id/searchCityName"
-        app:layout_constraintEnd_toEndOf="@+id/searchCityName"/>
+        app:layout_constraintEnd_toEndOf="@+id/searchCityName" />
 
     <Button
         android:id="@+id/btn_search"

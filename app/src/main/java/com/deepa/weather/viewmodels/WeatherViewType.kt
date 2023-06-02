@@ -14,7 +14,7 @@ enum class WeatherViewType(val value: Int) {
                 2 -> Detail
                 3 -> UserSearch
                 4 -> Summary
-                5-> CurrentLocation
+                5 -> CurrentLocation
                 else -> Default
             }
         }
